@@ -2,7 +2,7 @@
 #and simplify the process of generating a new email
 #pyautogui cheatsheet https://pyautogui.readthedocs.io/en/latest/cheatsheet.html
 
-import pyautogui
+import pyautogui as gui
 import time
 import sys
 
@@ -22,3 +22,9 @@ Plan steps
 6. Complete
 '''
 
+def open_chrome():
+    '''
+    Locate the chrome icon in the task bar and click it
+    '''
+
+    x,y = 
