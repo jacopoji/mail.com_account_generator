@@ -28,14 +28,28 @@ def open_chrome():
     Locate the chrome icon in the task bar and click it
     return True if complete
     '''
+    logged_in_flag = False
     try:
         screen_resolution = gui.size()
         search_region = (0,int(screen_resolution[1]*0.9),int(screen_resolution[0]*0.5),int(screen_resolution[1]*0.1)) # (left, top, width, height)
-        chrome_location = gui.locateCenterOnScreen('images/chrome.png',region=search_region) #
-        assert chrome_location != None #make sure chrome is found
+        chrome_location = gui.locateCenterOnScreen('images/chrome.png',region=search_region,confidence = 0.8) #
+        if chrome_location == None: #make sure chrome is not opened
+            chrome_location = gui.locateCenterOnScreen('images/chrome2.png',region=search_region,confidence = 0.8) #
+            logged_in_flag = True
+            print("Chrome is already opened with a user logged in")
         gui.click(chrome_location) #click on the chrome icon
         #test:
         #print(chrome_location)
+        if not logged_in_flag:
+            timer = 0
+            while True:
+                if gui.locateOnScreen('images/home.png',confidence = 0.8) is None:
+                    timer += 1
+                    if timer >= 5:
+                        break
+                    time.sleep(1)
+                else:
+                    break
         return True
     except:
         return False
@@ -52,6 +66,7 @@ def input_URL():
         #gui.press('f6')
         gui.typewrite(mail_reg_url)
         gui.press('enter')
+        time.sleep(2)
         return True
     except:
         return False
@@ -74,7 +89,7 @@ def user_info():
     day = '1'
     year = '1991'
     security_answer = 'New York'
-    password = ''  #password has to be at least 8 characters long with upper and lower case 
+    password = 'Maple123Maple123'  #password has to be at least 8 characters long with upper and lower case 
     #-----------------------------------------------------------
     screen_resolution = gui.size()
     try:
@@ -82,8 +97,8 @@ def user_info():
         time.sleep(1)
         first_name_number = random.randint(0,len(name_list)-1)
         last_name_number = random.randint(0,len(name_list)-1)
-        first_name = name_list[first_name_number]
-        last_name = name_list[last_name_number]
+        first_name = name_list[first_name_number].lower()
+        last_name = name_list[last_name_number].lower()
         gui.press('tab')
         gui.typewrite(first_name)
         gui.press('tab')
@@ -106,12 +121,12 @@ def user_info():
         gui.typewrite(security_answer) #security question answer
 
         ####Press the email verification button
-        verify_location = gui.locateCenterOnScreen('images/verify.png',confidence = 0.7) 
+        verify_location = gui.locateCenterOnScreen('images/verify.png',confidence = 0.8) 
         gui.click(verify_location) #click on the verify icon
         #print(verify_location)
 
         ####Press the captcha verification button
-        captcha_location = gui.locateCenterOnScreen('images/captcha.png',confidence = 0.7) 
+        captcha_location = gui.locateCenterOnScreen('images/captcha.png',confidence = 0.8) 
         gui.click(captcha_location) #click on the verify icon
         #print(captcha_location)
 
@@ -124,15 +139,15 @@ def user_info():
         gui.screenshot('screenshots/{}_{}.jpg'.format(first_name,last_name),region = (left,top,width,height)) #saved screeenshot format is firstName_lastName.jpg
 
         #Check if Captcha verification is complete. If not, let user finish manually
-        completed_captcha = gui.locateOnScreen('images/captcha_complete.png',confidence = 0.7)
+        completed_captcha = gui.locateOnScreen('images/captcha_complete.png',confidence = 0.8)
         if completed_captcha is None:
             gui.alert('Please manually complete captcha and press ok')
         else:
             print(completed_captcha)
             
         #Click Accept and Complete 
-        accept_location = gui.locateCenterOnScreen('images/accept.png',confidence = 0.7)
-        #gui.click(accept_location)
+        accept_location = gui.locateCenterOnScreen('images/accept.png',confidence = 0.8)
+        gui.click(accept_location)
         #print(accept_location)
         time.sleep(3)
         gui.press('f11') #quit fullscreen mode
