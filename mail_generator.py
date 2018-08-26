@@ -10,6 +10,11 @@ import random
 mail_reg_url = 'https://service.mail.com/registration.html?edition=int&lang=en&#.1258-header-signup2-1'
 name_list = open('name_list.txt','r').read().split('\n')
 name_list = list(filter(None,name_list))
+
+first_name_number = random.randint(0,len(name_list)-1)
+last_name_number = random.randint(0,len(name_list)-1)
+first_name = name_list[first_name_number].lower()
+last_name = name_list[last_name_number].lower()
 #F11 is shortcut for chrome to be fullscreen
 #\n == enter
 #lines = 4944
@@ -54,7 +59,7 @@ def open_chrome():
     except:
         return False
 
-def input_URL():
+def input_URL(go_url):
     '''
     Open a New tab
     Input URL
@@ -64,7 +69,7 @@ def input_URL():
     try:
         gui.hotkey('ctrl','t')
         #gui.press('f6')
-        gui.typewrite(mail_reg_url)
+        gui.typewrite(go_url)
         gui.press('enter')
         time.sleep(2)
         return True
@@ -95,10 +100,6 @@ def user_info():
     try:
         gui.press('f11')
         time.sleep(1)
-        first_name_number = random.randint(0,len(name_list)-1)
-        last_name_number = random.randint(0,len(name_list)-1)
-        first_name = name_list[first_name_number].lower()
-        last_name = name_list[last_name_number].lower()
         gui.press('tab')
         gui.typewrite(first_name)
         gui.press('tab')
@@ -156,6 +157,30 @@ def user_info():
     except:
         return False
         
+def maplestory_reg():
+    '''
+    Extra function
+    Register the email in Maplestory
+    URL: https://www.nexon.com/account/en/create
+    '''
+    maple_url = 'https://www.nexon.com/account/en/create'
+    maple_pass = 'Maple123'
+    month = '01'
+    year = '1991'
+    try:
+        input_URL(maple_url)
+        time.sleep(3)
+        gui.press(['tab','tab','tab'])
+        gui.typewrite('{}_{}@mail.com'.format(first_name,last_name))
+        gui.press('tab')
+        gui.typewrite(maple_pass)
+        gui.press('tab')
+        gui.typewrite(month)
+        gui.press(['tab','tab'])
+        gui.typewrite(year)
+        return True
+    except:
+        return False
 
 
 if __name__ == "__main__":
@@ -165,7 +190,7 @@ if __name__ == "__main__":
         print("Failed to Open Google Chrome")
         sys.exit()
     
-    if input_URL():
+    if input_URL(mail_reg_url):
         print("Jumped to mail registration page")
     else:
         print("Failed to input URL")
@@ -176,3 +201,11 @@ if __name__ == "__main__":
     else:
         print("Failed to input user info")
         sys.exit()
+    time.sleep(5)
+    if maplestory_reg():
+        print("Maplestory reg completed")
+    else:
+        print("Failed to register Maplestory")
+        sys.exit()
+
+    
